@@ -1,5 +1,5 @@
+/*
 #include <benchmark/benchmark.h>
-// #include </home/sven/devel/epr/benchmark/include/benchmark/benchmark.h>
 
 #include <seqan/bam_io.h>
 #include <seqan/basic.h>
@@ -16,20 +16,39 @@
 #include <typeinfo>
 #include <set>
 
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
+#include <stdlib.h>
+#include <time.h>
+//
 
-// #include "index_fm_rank_dictionary_levels.h"
 
-
-// using namespace seqan;
-using namespace std;
+using namespace seqan;
+// using namespace std;
 
 int main(int argc, char const * argv[])
 {
     std::cout << "Test\n";
     return 0;
+}*/
+
+
+#include <benchmark/benchmark.h>
+
+static void BM_StringCreation(benchmark::State& state) {
+  for (auto _ : state)
+    std::string empty_string;
 }
+// Register the function as a benchmark
+BENCHMARK(BM_StringCreation);
+
+// Define another benchmark
+static void BM_StringCopy(benchmark::State& state) {
+  std::string x = "hello";
+  for (auto _ : state)
+    std::string copy(x);
+}
+BENCHMARK(BM_StringCopy);
+
+BENCHMARK_MAIN();
 
 
 
