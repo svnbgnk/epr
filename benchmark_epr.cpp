@@ -28,6 +28,7 @@ void generateText(seqan::String<TChar, TConfig> & text, unsigned const length)
 template <typename TAlphabet>
 void rank(benchmark::State & state)
 {
+//     typedef Finite<8>                       TAlphabet;
     typedef FMIndexConfig<void, uint32_t>     TConfig;
     typedef FastFMIndexConfig<void, uint32_t, 2, 1> TMyFastConfig;
     typedef Index<String<TAlphabet>, FMIndex<void, TConfig> > TIndex;
@@ -49,7 +50,7 @@ void rank(benchmark::State & state)
     auto sigma_gen = [&sigma_dist, &sigma_engine]() { return sigma_dist(sigma_engine); };
 
     std::mt19937_64 position_engine(4654561);
-    std::uniform_int_distribution<> position_dist(0, text_size - 1);
+    std::uniform_int_distribution<> position_dist(1, text_size - 1);
     auto position_gen = [&position_dist, &position_engine]() { return position_dist(position_engine); };
 
     String<TAlphabet> genome;
@@ -68,7 +69,9 @@ void rank(benchmark::State & state)
         TAlphabet val = sigma_gen();
 
 //         std::cout << "pos: " << (int)pos << "\tval: " << (int)val << "\t";
-        benchmark::DoNotOptimize(rank = _getCumulativeBwtRank(index.lf, pos, val, smaller));
+//         benchmark::DoNotOptimize(rank = _getCumulativeBwtRank(index.lf, pos, val, smaller));
+//         TSize ret = _getPrefixSum(lf, val);
+        benchmark::DoNotOptimize(rank = getRank(index.lf.bwt, pos - 1, val, smaller));
 
 //         std::cout << "rank: " << rank << "\n";
     }
