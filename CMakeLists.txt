@@ -5,11 +5,6 @@ cmake_minimum_required (VERSION 3.0.0)
 project (epr CXX)
 set (CUR_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
-if (NOT DEFINED ${CMAKE_BUILD_TYPE})
-   set (CMAKE_BUILD_TYPE Debug)
-   message("*** CMAKE_BUILD_TYPE was not passed to CMake, therefore it was set to Release. ***")
-endif()
-
 # ----------------------------------------------------------------------------
 # Dependencies
 # ----------------------------------------------------------------------------
