@@ -60,6 +60,10 @@ add_executable (benchmark_epr benchmark_epr.cpp)
 target_link_libraries (benchmark_epr "${SEQAN_LIBRARIES}")
 target_link_libraries (benchmark_epr benchmark::benchmark)
 
+add_executable (benchmark_packed benchmark_packed.cpp)
+target_link_libraries (benchmark_packed "${SEQAN_LIBRARIES}")
+target_link_libraries (benchmark_packed benchmark::benchmark)
+
 
 
 
