@@ -24,14 +24,18 @@ void generateText(seqan::String<TChar, TConfig> & text, unsigned const length)
     }
 }
 
-
 template <typename TAlphabet>
 void rank(benchmark::State & state)
 {
-//     typedef Finite<8>                       TAlphabet;
-    typedef FMIndexConfig<void, uint32_t>     TConfig;
     typedef FastFMIndexConfig<void, uint32_t, 2, 1> TMyFastConfig;
-    typedef Index<String<TAlphabet>, FMIndex<void, TConfig> > TIndex;
+    typedef Levels<void, LevelsPrefixRDConfig<uint32_t, Alloc<>, 2, 1> >   Bwt;
+    typedef RankDictionary<TAlphabet, Bwt>               RankDictionary;
+
+
+
+
+    typedef Index<String<TAlphabet>, FMIndex<void, TMyFastConfig> > TIndex;
+
     unsigned const alphabetSize = seqan::ValueSize<TAlphabet>::VALUE;
 
     if (state.range(0) <= static_cast<decltype(state.range(0))>(0))
@@ -40,10 +44,6 @@ void rank(benchmark::State & state)
 //     uint8_t const log_sigma{static_cast<uint8_t>(std::clamp(std::ceil(std::log2(sigma)), 1.0, 64.0))};
     size_t const text_size{static_cast<size_t>(state.range(0))};
 
-
-//     std::cout << "log_sigma: " << (int) log_sigma << "\n";
-//     std::cout << "alphabetSize: " << alphabetSize << "\n";
-//     std::cout << "text_size: " << (int) text_size << "\n";
 
     std::mt19937_64 sigma_engine(12345);
     std::uniform_int_distribution<> sigma_dist(0, alphabetSize - 1);
@@ -55,25 +55,16 @@ void rank(benchmark::State & state)
 
     String<TAlphabet> genome;
     generateText(genome, text_size);
-//     std::cout << "Text: " << genome << "\n";
-    TIndex index(genome);
-    typename Iterator<TIndex, TopDown<> >::Type it(index);
-    ignoreUnusedVariableWarning(it);
 
+    RankDictionary sv(genome);
 
     for (auto _ : state)
     {
-        size_t smaller = 0;
         size_t pos = position_gen();
         uint32_t rank;
         TAlphabet val = sigma_gen();
 
-//         std::cout << "pos: " << (int)pos << "\tval: " << (int)val << "\t";
-//         benchmark::DoNotOptimize(rank = _getCumulativeBwtRank(index.lf, pos, val, smaller));
-//         TSize ret = _getPrefixSum(lf, val);
-        benchmark::DoNotOptimize(rank = getRank(index.lf.bwt, pos - 1, val, smaller));
-
-//         std::cout << "rank: " << rank << "\n";
+        benchmark::DoNotOptimize(rank = getRank(sv, pos - 1, val));
     }
 
 

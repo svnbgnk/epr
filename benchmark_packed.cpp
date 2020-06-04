@@ -56,7 +56,6 @@ void rank(benchmark::State & state)
         uint32_t rank;
         TAlphabet val = sigma_gen();
 
-
         benchmark::DoNotOptimize(infix(genome, pos, pos + windowSize));
 //         benchmark::DoNotOptimize(genome[pos]);
 
